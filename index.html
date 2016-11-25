@@ -1,0 +1,231 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Map of the Money</title>
+        <meta name="description" content="The Map of the Money displays the active VCs in Singapore.">
+        <meta property="og:title" content="Map of the Money" />
+        <meta property="og:description" content="The Map of the Money displays the active VCs in Singapore.">
+        <meta property="og:url" content="index.html" />
+        <meta property="og:image" content="pictures/2016-09-17-MapOfTheMoney.png" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="apple-touch-icon" href="apple-touch-icon.html">
+        <!-- Place favicon.ico in the root directory -->
+
+        <link rel="stylesheet" href="css/normalize.css">
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/site.css">
+        <link rel="stylesheet" href="css/map.css">
+
+        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+
+</head>
+
+    <body>
+      
+        <!-- Add your site or application content here -->
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="index.html">Map of the Money<span class="subtitle">v4.0</span></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                <li class="active">
+                  <a href="index.html">Map</a>
+                </li>
+                <li>
+                  <a href="table.html" aria-haspopup="true" aria-expanded="false">Data</a>
+                </li>
+                <li>
+                  <a href="#" aria-haspopup="true" aria-expanded="false">PDF (soon)</a>
+                </li>
+                <li>
+                  <a href="about.html" aria-haspopup="true" aria-expanded="false">About</a>
+                </li>
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+
+              <p>The visual list of venture capital (VCs) and active investors in Singapore for pre-seed, Seed, Series A, Series B and other funding rounds.</p>
+
+               <button class="btn btn-primary filter-button" data-filter="all">All</button>
+               <button class="btn btn-default filter-button" data-filter="vc">VC</button>
+               <button class="btn btn-default filter-button" data-filter="corporate">Corporate</button>
+               <button class="btn btn-default filter-button" data-filter="leader">Investment Lead</button>
+               <button class="btn btn-default filter-button" data-filter="coinvest">Co-invest</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- <h1>Map of the Money - 2016</h1> -->
+
+        <div id="map" class="map_area"></div>
+        <div id="xaxis" data-toggle="tooltip" data-placement="top" title="Tap the axis to filter"></div>
+        <div id="scaleLines"></div>
+        <a href="#" id="legend_recall" class="legend_recall" onclick="mava.showLegend();">?</a>
+
+        <div class="modal fade" id="legend-popup" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <!-- <a href="#" class="legend_recall" onclick="mava.showLegend();">i</a> -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="gridSystemModalLabel">How to read the Map of the Money</h3>
+              </div>
+              <div class="modal-body">
+                <p>The Map of the Money displays the active VCs in Singapore. All $ are US$.</p>
+                <h4>Dark blue when the data is verified</h4>
+                <div id="legend_verified" class="legend_sections map_area"></div>
+                <h4>Bigger funds are taller</h4>
+                <div id="legend_heights" class="legend_sections map_area"></div>
+                <h4>Tips</h4>
+                <div id="legend_values" class="legend_sections map_area"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="preloading">
+          <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+        <script src="js/vendor/accounting.min.js"></script>
+
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script>window.d3 || document.write('<script src="js/vendor/d3.v4.min.js"><\/script>')</script>
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script>window.d3 || document.write('<script src="js/vendor/d3.v4.min.js"><\/script>')</script>
+
+
+        <script src="js/plugins.js"></script>
+        <script src="js/settings.js"></script>
+        <script src="js/data.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/legend.js"></script>
+        <script src="js/filter.js"></script>
+
+        <!-- <script src="js/powerscale.js"></script> -->
+        <script src="js/doublingscale.js"></script>
+
+        <script type="text/javascript">
+          mava.getUnitWidth();
+          mava.addVCs( 'vertical' );
+          mava.addScale();
+
+          mava.createLegend = function( mode ){
+            mava.createLegendVerified( mode );
+            mava.createLegendHeight( mode );
+            mava.createLegendValues( mode );
+
+            $('#legend-popup').on( 'shown.bs.modal', function(e){
+              localStorage.setItem( 'legendShown', new Date() );
+            });
+          }
+
+          mava.createLegend( 'vertical');
+
+          mava.activeTapping();
+
+          mava.showLegend = function(){
+            $('#legend-popup').modal('toggle');
+          }
+
+          mava.autoShowLegend = function(){
+            var needToShowLegend = true;
+            var legendShown = localStorage.getItem( 'legendShown' );
+            console.log( legendShown );
+            if( legendShown ){
+              var msSinceLastLegendShown = Date.now() - Date.parse( legendShown );
+              var daysSinceLastLegend = ( msSinceLastLegendShown / (1000*60*60*24) );
+              console.log( 'Last legend was shown ' + daysSinceLastLegend + ' days ago' );
+              if( daysSinceLastLegend < 30 ){
+                console.log( 'Not showing the legend again' );
+                needToShowLegend = false;
+              }
+            }
+
+            if( needToShowLegend ){
+              mava.showLegend();
+            }
+          }
+
+          window.setTimeout( mava.autoShowLegend, 1000 );
+
+          mava.activeTooltips = function(){
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // $( '#xaxis' ).on( 'show.bs.tooltip', function(){
+            //   var filterTooltipShown = localStorage.getItem( 'filterTooltipShown' );
+            //   if( filterTooltipShown ){
+            //     $( '#xaxis' ).tooltip( 'hide' );
+            //   }
+            //   if( !filterTooltipShown ){
+            //     localStorage.setItem( 'filterTooltipShown', true );
+            //   }
+            // });
+          };
+          mava.activeTooltips();
+          localStorage.setItem( 'filterTooltipShown', false);
+
+          mava.adjustFilterArea = function(){
+            var filterAreaPosition = [20, 140]; //Vertical position of scaleLines
+            var livePosition = Math.max( filterAreaPosition[0], filterAreaPosition[1] - window.scrollY );
+            $( '#filter' ).css( 'top', livePosition );
+          }
+
+          mava.adjustScaleLines = function(){
+            var position = [0, 140]; //Vertical position of scaleLines
+            var livePosition = Math.max( position[0], position[1] - window.scrollY );
+            $( '#scaleLines' ).css( 'top', livePosition );
+          }
+
+          //Hide filter tooltip on scrolling
+          window.onscroll = function(){
+            $( '#xaxis' ).tooltip( 'hide' );
+            mava.adjustFilterArea();
+            mava.adjustScaleLines();
+          };
+          $( '#xaxis' ).tooltip( 'show' );
+
+          window.setTimeout( mava.showMailchimpPopup, 45000 );
+        </script>
+
+        <script type="text/javascript" src="https://s3.amazonaws.com/downloads.mailchimp.com/js/signup-forms/popup/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script>
+
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='https://www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create',mava.settings.ga,'auto');
+            ga('require', 'displayfeatures');
+            ga('send','pageview');
+        </script>
+    </body>
+</html>
